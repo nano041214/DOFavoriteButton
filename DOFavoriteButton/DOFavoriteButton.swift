@@ -97,16 +97,36 @@ public class DOFavoriteButton: UIButton {
         addTargets()
     }
 
+    public init(frame: CGRect, image: UIImage!, isAspectFit: Bool) {
+        super.init(frame: frame)
+        self.image = image
+        createLayers(image: image, isAspectFit: isAspectFit)
+        addTargets()
+    }
+
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         createLayers(image: UIImage())
         addTargets()
     }
 
-    private func createLayers(image image: UIImage!) {
+    private func createLayers(image image: UIImage!, isAspectFit: Bool = false) {
         self.layer.sublayers = nil
+        let imageFrame : CGRect
+        if isAspectFit {
+            let aspectRatio = image.size.width / image.size.height
+            let frameAspectRatio = frame.size.width / frame.size.height
+            if ( aspectRatio <= frameAspectRatio) {
+                let aspectFitWidth = frame.size.width / frameAspectRatio
+                imageFrame = CGRectMake(frame.size.width / 2 - aspectFitWidth / 4, frame.size.height / 2 - frame.size.height / 4, aspectFitWidth / 2, frame.size.height / 2)
+            } else {
+                let aspectFitHeight = frame.size.height * frameAspectRatio
+                imageFrame = CGRectMake(frame.size.width / 2 - frame.size.width / 4, frame.size.height / 2 - aspectFitHeight / 4, frame.size.width / 2, aspectFitHeight / 2)
+            }
+        } else {
+            imageFrame = CGRectMake(frame.size.width / 2 - frame.size.width / 4, frame.size.height / 2 - frame.size.height / 4, frame.size.width / 2, frame.size.height / 2)
+        }
 
-        let imageFrame = CGRectMake(frame.size.width / 2 - frame.size.width / 4, frame.size.height / 2 - frame.size.height / 4, frame.size.width / 2, frame.size.height / 2)
         let imgCenterPoint = CGPointMake(CGRectGetMidX(imageFrame), CGRectGetMidY(imageFrame))
         let lineFrame = CGRectMake(imageFrame.origin.x - imageFrame.width / 4, imageFrame.origin.y - imageFrame.height / 4 , imageFrame.width * 1.5, imageFrame.height * 1.5)
 
